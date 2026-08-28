@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Distraction-Free Launcher — Bento & E-Ink Android Guide</title>
+  <meta name="description" content="A minimalist executive Android launcher blending high-contrast E-Ink aesthetics and Bento Grid architecture to eliminate digital clutter and reclaim focus." />
+  
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #F5F5F5;
+      color: #1A1A1A;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .bento-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 28px;
+      transition: all 0.2s ease-in-out;
+    }
+    .bento-card:hover {
+      border-color: #D1D5DB;
+      transform: translateY(-2px);
+    }
+    .eink-shadow {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+    /* Theme overrides */
+    body.theme-warm {
+      background-color: #F4EFEA;
+      color: #221C16;
+    }
+    body.theme-warm .bento-card {
+      background-color: #FAF6F0;
+      border-color: #E3DCD3;
+    }
+    body.theme-charcoal {
+      background-color: #111111;
+      color: #F5F5F5;
+    }
+    body.theme-charcoal .bento-card {
+      background-color: #1C1C1E;
+      border-color: #27272A;
+      color: #F5F5F5;
+    }
+    body.theme-charcoal .text-gray-500, body.theme-charcoal .text-gray-400 {
+      color: #A1A1AA;
+    }
+    body.theme-charcoal .bg-gray-100 {
+      background-color: #27272A;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col transition-colors duration-300">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-gray-200/80 px-6 py-4 transition-colors">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-2xl bg-black flex items-center justify-center text-white">
+          <span class="material-symbols-outlined text-[20px]">shield</span>
+        </div>
+        <div>
+          <span class="font-bold text-sm tracking-tight block">Distraction-Free Launcher</span>
+          <span class="text-[10px] font-mono uppercase tracking-widest text-gray-500">Bento & E-Ink Edition</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-xs font-medium uppercase tracking-wider text-gray-600">
+        <a href="#features" class="hover:text-black transition-colors">Features</a>
+        <a href="#setup" class="hover:text-black transition-colors">Setup & Permissions</a>
+        <a href="#architecture" class="hover:text-black transition-colors">Architecture</a>
+        <a href="#faq" class="hover:text-black transition-colors">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Theme Selector -->
+        <div class="flex items-center bg-gray-100 p-1 rounded-full border border-gray-200 text-xs">
+          <button onclick="setTheme('paper')" id="btn-theme-paper" class="px-3 py-1 rounded-full bg-white shadow-xs font-semibold text-black transition-all">Paper</button>
+          <button onclick="setTheme('warm')" id="btn-theme-warm" class="px-3 py-1 rounded-full text-gray-600 hover:text-black transition-all">Warm</button>
+          <button onclick="setTheme('charcoal')" id="btn-theme-charcoal" class="px-3 py-1 rounded-full text-gray-600 hover:text-black transition-all">Slate</button>
+        </div>
+
+        <a href="https://github.com/owner/distraction-free-launcher" target="_blank" class="px-4 py-2 bg-black text-white text-xs font-semibold rounded-full hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main class="flex-1 max-w-6xl mx-auto px-6 py-12 w-full flex flex-col gap-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Left Hero Text -->
+      <div class="lg:col-span-6 flex flex-col gap-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-200/70 text-xs font-mono font-medium tracking-wide w-fit">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>v1.0.0 · JETPACK COMPOSE M3</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl font-light tracking-tight text-gray-900 leading-[1.15]">
+          A calm, focused Android launcher for <span class="font-bold underline decoration-2 underline-offset-8">deep work</span>.
+        </h1>
+
+        <p class="text-base text-gray-600 font-normal leading-relaxed">
+          Ditch notification dopamine loops and saturated icon grids. Built with high-contrast E-Ink typography and modular Bento Grid layout, the launcher provides active notification suppression, an executive daily agenda, and digital wellbeing telemetry.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <a href="#setup" class="px-6 py-3.5 bg-black text-white text-xs uppercase tracking-widest font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-sm">download</span>
+            Get Setup Guide
+          </a>
+          <a href="#features" class="px-6 py-3.5 border border-gray-300 bg-white text-black text-xs uppercase tracking-widest font-bold rounded-full hover:bg-gray-50 transition-colors">
+            Explore Bento Design
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Interactive Interactive Preview Device -->
+      <div class="lg:col-span-6 flex justify-center">
+        <div class="w-full max-w-sm rounded-[44px] p-4 bg-gray-900 shadow-2xl border-4 border-gray-800 relative">
+          <!-- Screen Container -->
+          <div class="bg-[#F5F5F5] rounded-[36px] p-5 flex flex-col gap-3 text-[#1A1A1A] overflow-hidden border border-gray-200/50 min-h-[580px]">
+            
+            <!-- Bento Header -->
+            <div class="pt-2 pb-1 px-1 flex justify-between items-center">
+              <div>
+                <div class="text-4xl font-light tracking-tight" id="demo-time">10:45</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Monday, Oct 23</div>
+              </div>
+              <div class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center bg-white shadow-xs">
+                <div class="w-2 h-2 rounded-full bg-black"></div>
+              </div>
+            </div>
+
+            <!-- Bento System Status Hero -->
+            <div class="bento-card p-4 flex items-center justify-between cursor-pointer" onclick="toggleDemoFocus()">
+              <div class="flex flex-col">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-gray-400">System Status</span>
+                <span class="text-xl font-medium tracking-tight" id="demo-status-text">Focus Active</span>
+                <span class="text-xs text-gray-500 italic" id="demo-status-sub">34 notifications silenced</span>
+              </div>
+              <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold transition-transform" id="demo-toggle-btn">
+                ON
+              </div>
+            </div>
+
+            <!-- 2-Column Bento Metrics -->
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="bento-card p-3.5 flex flex-col justify-between">
+                <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Screen Time</span>
+                <div class="mt-2">
+                  <div class="text-2xl font-light">2h 14m</div>
+                  <div class="w-full h-1 bg-gray-100 mt-2 rounded-full overflow-hidden">
+                    <div class="h-full bg-black w-[65%]"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-card p-3.5 flex flex-col justify-between">
+                <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Pulse</span>
+                <div class="flex items-end gap-1 h-10 mt-2">
+                  <div class="flex-1 bg-gray-200 h-[40%] rounded-t-sm"></div>
+                  <div class="flex-1 bg-gray-400 h-[70%] rounded-t-sm"></div>
+                  <div class="flex-1 bg-black h-[100%] rounded-t-sm"></div>
+                  <div class="flex-1 bg-gray-300 h-[60%] rounded-t-sm"></div>
+                  <div class="flex-1 bg-gray-200 h-[30%] rounded-t-sm"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bento Essentials Grid -->
+            <div class="bento-card p-4 flex flex-col">
+              <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-3">Essentials</span>
+              <div class="grid grid-cols-4 gap-2">
+                <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+                  <div class="w-11 h-11 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center font-bold text-sm">P</div>
+                  <span class="text-[10px] font-medium">Phone</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+                  <div class="w-11 h-11 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center font-bold text-sm">T</div>
+                  <span class="text-[10px] font-medium">Tasks</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+                  <div class="w-11 h-11 rounded-2xl border border-gray-200 bg-gray-50 flex items-center justify-center font-bold text-sm">N</div>
+                  <span class="text-[10px] font-medium">Notes</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+                  <div class="w-11 h-11 rounded-2xl border border-dashed border-gray-400 flex items-center justify-center font-bold text-xs text-gray-500">+</div>
+                  <span class="text-[10px] font-medium text-gray-400">Add</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bento Mini Bottom Nav -->
+            <div class="pt-3 flex items-center justify-around text-gray-400">
+              <div class="flex flex-col items-center gap-1 text-black font-bold">
+                <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <span class="text-[9px] uppercase tracking-wider">Home</span>
+              </div>
+              <div class="flex flex-col items-center gap-1 opacity-40">
+                <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <span class="text-[9px] uppercase tracking-wider">Apps</span>
+              </div>
+              <div class="flex flex-col items-center gap-1 opacity-40">
+                <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <span class="text-[9px] uppercase tracking-wider">Data</span>
+              </div>
+              <div class="flex flex-col items-center gap-1 opacity-40">
+                <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <span class="text-[9px] uppercase tracking-wider">Config</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE GRID SECTION -->
+    <section id="features" class="py-8 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-mono uppercase tracking-widest text-gray-500">Capabilities</span>
+        <h2 class="text-3xl font-light tracking-tight text-gray-900">Engineered for Radical Focus</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bento-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-2xl bg-black text-white flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-[20px]">notifications_off</span>
+            </div>
+            <h3 class="text-lg font-semibold tracking-tight mb-2">Notification Suppressor</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Integrates with Android's <code class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">NotificationListenerService</code> to silently intercept distracting pings during active focus blocks, holding them in a quiet batch inbox.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs font-semibold">
+            <span>VIP Whitelist bypass supported</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bento-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-2xl bg-black text-white flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-[20px]">checklist</span>
+            </div>
+            <h3 class="text-lg font-semibold tracking-tight mb-2">Executive Priorities</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Pin your top 3–5 strategic daily goals front and center. Keep your managerial focus locked onto high-leverage outcomes before opening other applications.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs font-semibold">
+            <span>Room database local persistence</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bento-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-2xl bg-black text-white flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-[20px]">palette</span>
+            </div>
+            <h3 class="text-lg font-semibold tracking-tight mb-2">4 E-Ink Color Palettes</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Seamlessly switch between Pure Paper, Warm E-Paper, Charcoal Slate, and Brutalist Ink. Pair with system-level monochrome for an authentic e-reader aesthetic.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs font-semibold">
+            <span>Eye fatigue reduction</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETUP & PERMISSIONS INTERACTIVE CHECKLIST -->
+    <section id="setup" class="py-8 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-mono uppercase tracking-widest text-gray-500">Installation & Setup</span>
+        <h2 class="text-3xl font-light tracking-tight text-gray-900">Provisioning Android Permissions</h2>
+        <p class="text-sm text-gray-600">To allow the distraction shield to filter notifications and measure screen time without cloud dependencies, follow these steps:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Manual Setup Steps -->
+        <div class="bento-card p-6 flex flex-col gap-4">
+          <h3 class="text-base font-bold uppercase tracking-wider text-xs text-gray-500">Interactive Checklist</h3>
+          
+          <div class="flex flex-col gap-3">
+            <label class="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+              <input type="checkbox" class="mt-1 w-4 h-4 rounded border-gray-300 text-black focus:ring-black accent-black" />
+              <div>
+                <span class="text-sm font-semibold block">1. Set as Default Home App</span>
+                <span class="text-xs text-gray-500 block">Settings > Apps > Default Apps > Home App</span>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+              <input type="checkbox" class="mt-1 w-4 h-4 rounded border-gray-300 text-black focus:ring-black accent-black" />
+              <div>
+                <span class="text-sm font-semibold block">2. Grant Notification Access</span>
+                <span class="text-xs text-gray-500 block">Settings > Apps > Special App Access > Notification Access</span>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+              <input type="checkbox" class="mt-1 w-4 h-4 rounded border-gray-300 text-black focus:ring-black accent-black" />
+              <div>
+                <span class="text-sm font-semibold block">3. Grant Usage Access</span>
+                <span class="text-xs text-gray-500 block">Settings > Apps > Special App Access > Usage Access</span>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+              <input type="checkbox" class="mt-1 w-4 h-4 rounded border-gray-300 text-black focus:ring-black accent-black" />
+              <div>
+                <span class="text-sm font-semibold block">4. Exclude from Battery Optimization</span>
+                <span class="text-xs text-gray-500 block">Ensures shield service remains active uninterrupted</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Fast-Track ADB Commands -->
+        <div class="bento-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-base font-bold uppercase tracking-wider text-xs text-gray-500">Fast ADB Provisioning</h3>
+              <button onclick="copyAdb()" id="copy-btn" class="px-2.5 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-xs font-mono font-medium transition-colors">Copy</button>
+            </div>
+            <p class="text-xs text-gray-600 mb-3">For developers and enterprise deployments, grant the required listener permission via ADB:</p>
+            
+            <pre class="bg-black text-gray-200 p-4 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed" id="adb-code"># Grant notification listener permission
+adb shell cmd notification allow_listener \
+  com.example/.system.NotificationSuppressorService
+
+# Grant usage stats permission
+adb shell pm grant com.example \
+  android.permission.PACKAGE_USAGE_STATS</pre>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
+            Requires USB debugging enabled under Android Developer Options.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE SECTION -->
+    <section id="architecture" class="py-8 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-mono uppercase tracking-widest text-gray-500">Codebase</span>
+        <h2 class="text-3xl font-light tracking-tight text-gray-900">Modern Android Architecture</h2>
+      </div>
+
+      <div class="bento-card p-6 overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm">
+          <div class="flex flex-col gap-1">
+            <span class="font-bold text-xs uppercase tracking-wider text-gray-400">UI Layer</span>
+            <span class="font-semibold text-gray-900">Jetpack Compose M3</span>
+            <p class="text-xs text-gray-500">Single Activity, declarative composables, type-safe navigation, and custom Bento containers.</p>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-bold text-xs uppercase tracking-wider text-gray-400">State Management</span>
+            <span class="font-semibold text-gray-900">ViewModel + StateFlow</span>
+            <p class="text-xs text-gray-500">Unidirectional Data Flow with coroutine-backed reactive observers and lifecycle awareness.</p>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-bold text-xs uppercase tracking-wider text-gray-400">Persistence</span>
+            <span class="font-semibold text-gray-900">Room & DataStore</span>
+            <p class="text-xs text-gray-500">Zero cloud sync dependency. High performance SQLite Room database for priorities and analytics.</p>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-bold text-xs uppercase tracking-wider text-gray-400">System Interop</span>
+            <span class="font-semibold text-gray-900">Services & Widgets</span>
+            <p class="text-xs text-gray-500">Foreground services, BootReceiver on restart, and AppWidgetProvider for home screen controls.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-8 flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-mono uppercase tracking-widest text-gray-500">Common Questions</span>
+        <h2 class="text-3xl font-light tracking-tight text-gray-900">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bento-card p-5">
+          <h4 class="font-semibold text-sm mb-1.5">Does the launcher track or send my data anywhere?</h4>
+          <p class="text-xs text-gray-600 leading-relaxed">No. The launcher operates 100% locally on your device. Notification filtering and usage metrics are stored securely in local Room SQLite storage and never leave your phone.</p>
+        </div>
+
+        <div class="bento-card p-5">
+          <h4 class="font-semibold text-sm mb-1.5">Will I miss important calls or emergency alerts?</h4>
+          <p class="text-xs text-gray-600 leading-relaxed">No. You can add phone calls, SMS, Slack, or any critical app to the VIP Whitelist in Settings to ensure urgent communication pings bypass the suppression shield.</p>
+        </div>
+
+        <div class="bento-card p-5">
+          <h4 class="font-semibold text-sm mb-1.5">Can I use this on a real E-Ink phone (e.g. Boox, Hisense)?</h4>
+          <p class="text-xs text-gray-600 leading-relaxed">Yes! The high-contrast black/white layouts and static typography were specifically designed to excel on monochromatic E-Ink refresh displays without ghosting.</p>
+        </div>
+
+        <div class="bento-card p-5">
+          <h4 class="font-semibold text-sm mb-1.5">How do I revert to my old launcher?</h4>
+          <p class="text-xs text-gray-600 leading-relaxed">Simply go to Android Settings > Apps > Default Apps > Home App and choose your previous launcher whenever you wish.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-16 border-t border-gray-200 bg-white py-8 px-6 transition-colors">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-gray-900">Distraction-Free Minimalist Launcher</span>
+        <span>·</span>
+        <span>Licensed under MIT</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="#features" class="hover:text-black transition-colors">Features</a>
+        <a href="#setup" class="hover:text-black transition-colors">Setup</a>
+        <a href="https://github.com/owner/distraction-free-launcher" target="_blank" class="hover:text-black transition-colors">GitHub Repository</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT FOR THEME & INTERACTIVE DEMO -->
+  <script>
+    function setTheme(theme) {
+      document.body.className = '';
+      if (theme === 'warm') {
+        document.body.classList.add('theme-warm');
+      } else if (theme === 'charcoal') {
+        document.body.classList.add('theme-charcoal');
+      }
+
+      ['paper', 'warm', 'charcoal'].forEach(t => {
+        const btn = document.getElementById(`btn-theme-${t}`);
+        if (t === theme) {
+          btn.className = 'px-3 py-1 rounded-full bg-white shadow-xs font-semibold text-black transition-all';
+        } else {
+          btn.className = 'px-3 py-1 rounded-full text-gray-600 hover:text-black transition-all';
+        }
+      });
+    }
+
+    let isDemoFocus = true;
+    function toggleDemoFocus() {
+      isDemoFocus = !isDemoFocus;
+      const statusText = document.getElementById('demo-status-text');
+      const statusSub = document.getElementById('demo-status-sub');
+      const toggleBtn = document.getElementById('demo-toggle-btn');
+
+      if (isDemoFocus) {
+        statusText.innerText = 'Focus Active';
+        statusSub.innerText = '34 notifications silenced';
+        toggleBtn.innerText = 'ON';
+        toggleBtn.className = 'w-12 h-12 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold transition-transform scale-105';
+      } else {
+        statusText.innerText = 'Shield Ready';
+        statusSub.innerText = 'Tap to start 25m focus block';
+        toggleBtn.innerText = 'OFF';
+        toggleBtn.className = 'w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 text-xs font-bold transition-transform';
+      }
+    }
+
+    function copyAdb() {
+      const code = document.getElementById('adb-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+      });
+    }
+
+    // Update demo clock
+    setInterval(() => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const timeElem = document.getElementById('demo-time');
+      if (timeElem) timeElem.innerText = `${hours}:${mins}`;
+    }, 1000);
+  </script>
+</body>
+</html>

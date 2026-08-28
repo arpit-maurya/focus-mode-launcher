@@ -1,0 +1,7 @@
+{
+  "name": "Distraction Free Launcher",
+  "description": "A minimalist distraction-free E-ink launcher with grayscale aesthetics, notification suppressor, app usage timers, focus mode widgets, and digital wellbeing analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

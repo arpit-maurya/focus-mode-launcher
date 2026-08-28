@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Distraction Free Launcher</string>
+    <string name="widget_description">Toggle Executive Focus Mode and distraction blocker quickly.</string>
+    <string name="channel_focus_name">Distraction Free Shield</string>
+    <string name="channel_focus_desc">Persistent focus mode status and notification filter engine.</string>
+</resources>
